@@ -1,9 +1,8 @@
 package br.com.alura.screenmatch.modelos;
 
+import java.sql.SQLOutput;
 import java.text.CollationElementIterator;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 public class PrincipalComListas {
     public static void main(String[] args) {
@@ -29,7 +28,7 @@ public class PrincipalComListas {
                 System.out.println("Classificação: " + filme.getClassificacao());
             }
         }
-        ArrayList<String> buscaPorArtista = new ArrayList<>();
+        List<String> buscaPorArtista = new LinkedList<>();
 
         buscaPorArtista.add("Adam Sandler");
         buscaPorArtista.add("Paulo");
@@ -40,7 +39,8 @@ public class PrincipalComListas {
         Collections.sort(lista);
         System.out.println(lista);
 
-
+        lista.sort(Comparator.comparing(Titulo::getTotalDeAvaliacoes));
+        System.out.println("Ordenando por ano:\n" + lista);
 
     }
 
