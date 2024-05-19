@@ -1,4 +1,6 @@
-package br.com.alura.screenmatch.modelos;
+import br.com.alura.screenmatch.modelos.Filme;
+import br.com.alura.screenmatch.modelos.Serie;
+import br.com.alura.screenmatch.modelos.Titulo;
 
 import java.sql.SQLOutput;
 import java.text.CollationElementIterator;
