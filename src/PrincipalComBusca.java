@@ -4,6 +4,8 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -17,27 +19,38 @@ public class PrincipalComBusca {
         System.out.println("Digite um filme para busca: ");
         var busca = in.nextLine();
 
-        String endereco = "https://www.omdbapi.com/?t="+busca.toLowerCase()+"&apikey=47794d59";
+        String endereco = "https://www.omdbapi.com/?t=" + busca.toLowerCase().replace(" ", "+") + "&apikey=47794d59";
 
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(endereco))
-                .build();
-        HttpResponse<String> response = client
-                .send(request, HttpResponse.BodyHandlers.ofString());
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(endereco))
+                    .build();
+            HttpResponse<String> response = client
+                    .send(request, HttpResponse.BodyHandlers.ofString());
 
-        String json = response.body();
-        //System.out.println(json);
+            String json = response.body();
+            //System.out.println(json);
 
-        //Aqui crio meu objeto gson com um builder para poder manter as variaveis em tituloOmdb em minusculo
-        Gson gson = new GsonBuilder().
-                setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
-                .create();
-        TituloOmdb meuTituloOmdb = gson.fromJson(json, TituloOmdb.class);
-        System.out.println(meuTituloOmdb);
+            //Aqui crio meu objeto gson com um builder para poder manter as variaveis em tituloOmdb em minusculo
+            Gson gson = new GsonBuilder().
+                    setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+                    .create();
+            TituloOmdb meuTituloOmdb = gson.fromJson(json, TituloOmdb.class);
+            System.out.println(meuTituloOmdb);
+            Titulo meuTitulo = new Titulo(meuTituloOmdb);
+            System.out.println("Título já convertido");
+            System.out.println(meuTitulo);
 
-        System.out.println("Título já convertido");
-        Titulo meuTitulo = new Titulo(meuTituloOmdb);
-        System.out.println(meuTitulo);
+            FileWriter escrita = new FileWriter("filmes.txt");
+            escrita.write(meuTitulo.toString());
+            escrita.close();
+        } catch (NumberFormatException e) {
+            System.out.println("Aconteceu o erro: " + e.getMessage());
+        } catch (IllegalArgumentException e){
+            System.out.println("Algum erro de argumento na busca!");
+        } catch (Exception e){
+            System.out.println("Alguma exceção muito genérica ocorreu!");
+        }
     }
 }
